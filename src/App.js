@@ -5,17 +5,29 @@ import { IoIosAdd } from "react-icons/io"
 import { FaCaretDown } from "react-icons/fa";
 
 function App() {
+  const [data, setData] = useState([])
+  const [heroData, setHeroData] = useState({
+    siteTitle: "",
+    pic: null,
+    title: "",
+    subtitle: "",
+    name: "",
+    email: ""
+  })
   const [enableEdit, setEnableEdit] = useState(true)
   const [heroPic, setHeroPic] = useState(null)
   const [showSectionsMenu, setShowSectionsMenu] = useState(false)
-  const [data, setData] = useState([])
   const inputRef = useRef(null)
   const menuRef = useRef(null)
+
+  // useEffect(() => {
+  //   setData([...data, {sectionName: "hero", sectionData: heroData}])
+  // }, [heroData])
 
   const handleImageUpload = (e) => {
       const file = e.target.files[0]
       const imageUrl = URL.createObjectURL(file)
-      setHeroPic(imageUrl)
+      setHeroData({...heroData, pic: imageUrl})
   }
 
   useEffect(() => {
@@ -33,7 +45,7 @@ function App() {
 
   const handleAddAboutSection = () => {
     if (data.some(item => item.sectionName === "about")) return
-    
+
     setData([...data, {sectionName: "about", sectionData: {}}])
     setShowSectionsMenu(false)
 
@@ -62,16 +74,18 @@ function App() {
             placeholder="Enter site title" 
             className="bg-transparent p-2 outline-none" 
             disabled={!enableEdit}
+            value={heroData.siteTitle}
+            onChange={(e) => setHeroData({...heroData, siteTitle: e.target.value})}
           />
 
           <div className="grid md:grid-cols-3 grid-cols-1 mt-8 md:mt-20 md:gap-4">
             <div className="py-4 md:px-4 col-span-1">
               <div 
-                className={`h-60 w-60 md:h-72 md:w-72 bg-zinc-300 rounded-xl ${heroPic ? "overflow-hidden relative" : "flex items-center justify-center border border-2 border-dashed border-zinc-400"}`}
+                className={`h-60 w-60 md:h-72 md:w-72 bg-zinc-300 rounded-xl ${heroData?.pic ? "overflow-hidden relative" : "flex items-center justify-center border border-2 border-dashed border-zinc-400"}`}
               >
                 <input ref={inputRef} id="hero-image" onChange={handleImageUpload} className="hidden" type="file" disabled={!enableEdit} />
                 <button onClick={() => inputRef.current.click()}>
-                  {heroPic ? <img src={heroPic} className="absolute top-0 left-0 h-full w-full object-cover" /> : <IoImage className="h-16 w-16 text-zinc-600" />}
+                  {heroData?.pic ? <img src={heroData?.pic} className="absolute top-0 left-0 h-full w-full object-cover" /> : <IoImage className="h-16 w-16 text-zinc-600" />}
                 </button>
               </div>
             </div>
@@ -82,12 +96,16 @@ function App() {
                 placeholder="Click to add title" 
                 className="p-2 bg-transparent outline-none font-medium text-3xl md:text-5xl pb-0" 
                 disabled={!enableEdit}
+                value={heroData.title}
+                onChange={(e) => setHeroData({...heroData, title: e.target.value})}
               />
               <input 
                 type="text" 
                 placeholder="Click to add subtitle" 
                 className="p-2 outline-none bg-transparent"
                 disabled={!enableEdit}
+                value={heroData.subtitle}
+                onChange={(e) => setHeroData({...heroData, subtitle: e.target.value})}
               />
             </div>
           </div>
@@ -98,12 +116,16 @@ function App() {
               placeholder="Enter your name here" 
               className="p-2 outline-none bg-transparent font-bold"
               disabled={!enableEdit}
+              value={heroData.name}
+              onChange={(e) => setHeroData({...heroData, name: e.target.value})}
             />
             <input 
               type="email" 
               placeholder="Enter email" 
               className="p-2 outline-none bg-transparent"
               disabled={!enableEdit}
+              value={heroData.email}
+              onChange={(e) => setHeroData({...heroData, email: e.target.value})}
             />
           </div>
         </div>
